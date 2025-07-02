@@ -18,8 +18,6 @@ A responsive movie search application built with **React.js**, using the **TMDB 
 
 > 🧠 Type a movie name like `Avengers`, `Inception`, or `Avatar` to test the search feature.
 
-![Demo Screenshot](https://via.placeholder.com/800x450.png?text=Demo+GIF+or+Screenshot)
-
 ---
 
 ---

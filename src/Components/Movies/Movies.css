@@ -1,71 +1,82 @@
+/* Movies.css */
+
 .movies-container {
-  padding-top: 80px;
-  margin-top: 108px;
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  gap: 30px;
-  padding: 30px;
-  min-height: calc(100vh - 80px);
-  background-color: var(--bg-color);
-  transition: background-color 0.3s ease;
+  padding: 20px;
+  max-width: 1200px;
+  margin:100px;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
-.no-results {
-  grid-column: 1 / -1;
-  text-align: center;
-  padding: 3rem;
-  color: var(--text-color);
+/* Style for each MovieSection title */
+.movie-section-title {
+  font-size: 1.8rem;
+  font-weight: 700;
+  margin: 25px 0 15px;
+  color: var(--title-color);
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 10px;
+  user-select: none;
+  cursor: default;
 }
 
-.no-results h3 {
-  font-size: 1.5rem;
-  margin-bottom: 1rem;
+/* Emoji is part of the title text, so no separate styling needed */
+/* Add subtle text-shadow for better visibility */
+.movie-section-title {
+  text-shadow: 1px 1px 2px rgba(0,0,0,0.15);
 }
 
-.no-results p {
-  color: var(--text-secondary);
-  font-size: 1rem;
-  opacity: 0.8;
+/* Arrows styling (→ → →) using ::after pseudo-element */
+.movie-section-title::after {
+  content: '→ → →';
+  margin-left: auto;
+  font-weight: 600;
+  font-size: 1.2rem;
+  color: var(--arrow-color);
+  letter-spacing: 6px;
+  user-select: none;
+  opacity: 0.7;
+  transition: color 0.3s ease;
 }
 
-.loading-spinner {
-  grid-column: 1 / -1;
-  margin: 3rem auto;
-  width: 60px;
-  height: 60px;
-  border: 6px solid var(--border-color);
-  border-top-color: var(--accent-color);
-  border-radius: 50%;
-  animation: spin 1s linear infinite;
-}
-
-/* Theme variables */
+/* Dark and light mode variables */
 :root {
-  --bg-color: #ffffff;
-  --card-bg: #ffffff;
-  --text-color: #333333;
-  --text-secondary: #666666;
-  --accent-color: #007bff;
-  --border-color: #e0e0e0;
-  --shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  --title-color: #222;
+  --arrow-color: #888;
+  --background-color: #fff;
 }
 
 .dark-mode {
-  --bg-color: #121212;
-  --card-bg: #1e1e1e;
-  --text-color: #ffffff;
-  --text-secondary: #bbbbbb;
-  --accent-color: #4da6ff;
-  --border-color: #333333;
-  --shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  --title-color: #ddd;
+  --arrow-color: #bbb;
+  --background-color: #121212;
 }
 
-body {
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-  transition: background-color 0.3s ease;
+.app.light {
+  background-color: var(--background-color);
+  color: var(--title-color);
 }
 
-@keyframes spin {
-  to { transform: rotate(360deg); }
+.app.dark {
+  background-color: var(--background-color);
+  color: var(--title-color);
 }
+
+/* Optional: hover effect on titles (just subtle) */
+.movie-section-title:hover::after {
+  color: var(--title-color);
+  opacity: 1;
+}
+
+/* Responsive adjustments */
+@media (max-width: 600px) {
+  .movie-section-title {
+    font-size: 1.4rem;
+  }
+  .movie-section-title::after {
+    font-size: 1rem;
+    letter-spacing: 4px;
+  }
+}
+

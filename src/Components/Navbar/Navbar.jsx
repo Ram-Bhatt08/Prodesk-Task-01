@@ -63,7 +63,7 @@ function Navbar({ toggleTheme, darkMode, onSearch }) {
       <div className="nav-container">
         <div className="nav-left">
           <Link to="/" className="nav-logo">
-            <h1>🎬 React Movie Cards</h1>
+            <h1>🎬 React Movie App</h1>
           </Link>
 
           <div className={`search-container ${isSearchFocused ? 'focused' : ''}`}>

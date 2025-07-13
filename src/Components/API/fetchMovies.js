@@ -1,11 +1,18 @@
 const API_KEY = 'ffef630e4f704d9193ed9506db70c6c6';
 const BASE_URL = 'https://api.themoviedb.org/3';
 
-export async function fetchMoviesFromTMDB(query = '') {
+const endpoints = {
+  popular: `${BASE_URL}/movie/popular?api_key=${API_KEY}&language=en-US&page=1`,
+  topRated: `${BASE_URL}/movie/top_rated?api_key=${API_KEY}&language=en-US&page=1`,
+  upcoming: `${BASE_URL}/movie/upcoming?api_key=${API_KEY}&language=en-US&page=1`,
+  latest: `${BASE_URL}/movie/now_playing?api_key=${API_KEY}&language=en-US&page=1`,
+};
+
+export async function fetchMovies(category = 'popular', query = '') {
   try {
     const url = query
       ? `${BASE_URL}/search/movie?api_key=${API_KEY}&query=${encodeURIComponent(query)}`
-      : `${BASE_URL}/movie/popular?api_key=${API_KEY}&language=en-US&page=1`;
+      : endpoints[category];
 
     const response = await fetch(url);
     const data = await response.json();

@@ -1,14 +1,15 @@
 import React, { useState, useEffect, useRef } from 'react';
 import MovieCard from '../MovieCard/MovieCard';
 import Navbar from '../Navbar/Navbar';
-import { fetchMoviesFromTMDB } from '../API/fetchMovies';
+import { fetchMovies } from '../API/fetchMovies';
+import MovieSection from '../MovieSection/MovieSection';
 import './Movies.css';
 
 function Movies() {
-  const [movies, setMovies] = useState([]);          // Holds movies to display
   const [darkMode, setDarkMode] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
+  const [searchResults, setSearchResults] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
   const searchTimeout = useRef(null);
 
   const handleSearch = (query) => {
@@ -16,29 +17,23 @@ function Movies() {
   };
 
   useEffect(() => {
-    // Clear previous debounce timer
     if (searchTimeout.current) clearTimeout(searchTimeout.current);
+
+    if (searchQuery.trim() === '') {
+      setSearchResults([]);
+      return;
+    }
 
     setIsLoading(true);
 
     searchTimeout.current = setTimeout(async () => {
-      // fetchMoviesFromTMDB handles popular movies if query is empty
-      const fetchedMovies = await fetchMoviesFromTMDB(searchQuery);
-      setMovies(fetchedMovies);
+      const results = await fetchMovies('', searchQuery);
+      setSearchResults(results);
       setIsLoading(false);
-    }, 400); // debounce delay
+    }, 400);
 
-    // Cleanup on unmount or query change
     return () => clearTimeout(searchTimeout.current);
   }, [searchQuery]);
-
-  // Dark mode toggle and persistence
-  const toggleTheme = () => {
-    const newMode = !darkMode;
-    setDarkMode(newMode);
-    document.body.classList.toggle('dark-mode', newMode);
-    localStorage.setItem('darkMode', newMode);
-  };
 
   useEffect(() => {
     const saved = localStorage.getItem('darkMode') === 'true';
@@ -46,31 +41,43 @@ function Movies() {
     document.body.classList.toggle('dark-mode', saved);
   }, []);
 
+  const toggleTheme = () => {
+    const newMode = !darkMode;
+    setDarkMode(newMode);
+    document.body.classList.toggle('dark-mode', newMode);
+    localStorage.setItem('darkMode', newMode);
+  };
+
   return (
     <div className={`app ${darkMode ? 'dark' : 'light'}`}>
-      <Navbar
-        toggleTheme={toggleTheme}
-        darkMode={darkMode}
-        onSearch={handleSearch}
-      />
+      <Navbar toggleTheme={toggleTheme} darkMode={darkMode} onSearch={handleSearch} />
 
       <div className="movies-container">
-        {isLoading ? (
-          <div className="loading-spinner"></div>
-        ) : movies.length > 0 ? (
-          movies.map((movie) => (
-            <MovieCard key={movie.id} movie={movie} darkMode={darkMode} />
-          ))
-        ) : searchQuery.trim() !== '' ? (
-          <div className="no-results">
-            <h3>No movies found</h3>
-            <p>Try searching for a different title</p>
-          </div>
+        {searchQuery.trim() ? (
+          isLoading ? (
+            <div className="loading-spinner"></div>
+          ) : searchResults.length > 0 ? (
+            <div className="search-results">
+              <h2>Search Results</h2>
+              <div className="movie-list">
+                {searchResults.map((movie) => (
+                  <MovieCard key={movie.id} movie={movie} darkMode={darkMode} />
+                ))}
+              </div>
+            </div>
+          ) : (
+            <div className="no-results">
+              <h3>No movies found</h3>
+              <p>Try searching for a different title</p>
+            </div>
+          )
         ) : (
-          // Optional: show nothing or a message when no search & no movies yet
-          <div className="welcome-message">
-            <h3>Welcome! Start typing to search for movies.</h3>
-          </div>
+          <>
+            <MovieSection title="🔥 Popular Movies" category="popular" darkMode={darkMode} />
+            <MovieSection title="⭐ Top Rated" category="topRated" darkMode={darkMode} />
+            <MovieSection title="🎬 Now Playing" category="latest" darkMode={darkMode} />
+            <MovieSection title="🎥 Upcoming Movies" category="upcoming" darkMode={darkMode} />
+          </>
         )}
       </div>
     </div>
